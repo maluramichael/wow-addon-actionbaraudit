@@ -1,23 +1,33 @@
 # ActionBarAudit
 
-Analyze your action bars for empty slots, missing keybinds, and optimization opportunities.
+Scan and fix low rank spells on your action bars with one click.
 
 ## Description
 
-ActionBarAudit is a lightweight addon that helps you keep your action bars organized and efficient. With a single command, it scans all your action bars and reports:
+ActionBarAudit helps you keep your action bars optimized by detecting and fixing low rank spells. Open your spellbook and use the built-in buttons to scan all action bars and automatically upgrade any outdated spell ranks.
 
-- **Empty Slots** - Find unused action bar slots across all bars
-- **Missing Keybinds** - Identify abilities on your main action bar that have no keybinding assigned
-- **Quick Overview** - Get instant statistics about your action bar usage
+## Features
 
-Perfect for players who want to ensure their UI is optimized and all important abilities are easily accessible.
+- **Check** - Scan all action bars for spells that aren't max rank
+- **Fix All** - Automatically upgrade all detected low rank spells
+- Supports macros containing spells
+- Works with default UI action bars
 
 ## Usage
 
-- `/aba` or `/actionbaraudit` - Run an audit of your action bars
-- `/aba config` - Open the options panel
-- **Left-click** minimap button - Run audit
-- **Right-click** minimap button - Open options
+### Spellbook Buttons
+Open your spellbook (P) - you'll see two buttons in the top right:
+- **Check** - Scan for low rank spells
+- **Fix All** - Upgrade all detected spells to max rank
+
+### Slash Commands
+- `/aba` - Scan action bars and report low rank spells
+- `/aba fix` - Upgrade all low rank spells to max rank
+- `/aba config` - Open options panel
+
+### Minimap Button
+- **Left-click** - Scan action bars
+- **Right-click** - Open options
 
 ## Installation
 

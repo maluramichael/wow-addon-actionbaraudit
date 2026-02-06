@@ -9,8 +9,11 @@ globals = { "ActionBarAudit", "_G" }
 
 read_globals = {
     "LibStub", "CreateFrame", "UIParent", "GameTooltip", "Settings",
-    "GetActionInfo", "GetBindingKey", "GetTime",
+    "GetActionInfo", "GetSpellInfo",
+    "GetSpellBookItemName", "GetSpellTabInfo", "GetNumSpellTabs", "GetMacroSpell",
+    "HasAction", "Spell", "SpellBookFrame", "BOOKTYPE_SPELL",
+    "PickupSpellBookItem", "PlaceAction", "ClearCursor", "InCombatLockdown",
     "InterfaceOptionsFrame_OpenToCategory",
     "pairs", "ipairs", "select", "string", "table", "math", "format", "date",
-    "tonumber", "tostring", "type", "unpack",
+    "tonumber", "tostring", "type", "unpack", "strmatch", "tinsert", "print",
 }
