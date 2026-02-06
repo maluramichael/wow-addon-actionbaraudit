@@ -1,0 +1,14 @@
+## Interface: 20505
+## Title: |cFF00D1FFMM|r ActionBarAudit
+## Notes: Analyze action bars for empty slots, missing keybinds, and duplicate abilities
+## Author: Michael Malura
+## Version: 1.0.0
+## X-Curse-Project-ID: 1455347
+## IconTexture: Interface\Icons\INV_Misc_Gear_01
+## Category-enUS: Action Bars
+## Category-deDE: Aktionsleisten
+## SavedVariables: ActionBarAuditDB
+## OptionalDeps: Ace3, LibDataBroker-1.1, LibDBIcon-1.0
+
+embeds.xml
+Core.lua
