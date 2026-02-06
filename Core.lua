@@ -101,7 +101,7 @@ function ActionBarAudit:RunAudit()
             local actionSlot = (bar - 1) * 12 + slot
             totalSlots = totalSlots + 1
 
-            local actionType, id = GetActionInfo(actionSlot)
+            local actionType = GetActionInfo(actionSlot)
             local hasAction = actionType ~= nil
 
             if not hasAction then
