@@ -3,6 +3,7 @@
 <!-- links:start -->
 [![Support me on Ko-fi](https://malura.de/assets/badge/kofi.svg)](https://malura.de/go/kofi?ref=wow-addon-actionbaraudit)
 [![Check out my page](https://malura.de/assets/badge/malura.svg)](https://malura.de/go/site?ref=wow-addon-actionbaraudit)
+[![CurseForge](https://malura.de/badge/curseforge/actionbaraudit.svg)](https://www.curseforge.com/wow/addons/actionbaraudit)
 <!-- links:end -->
 
 Scan and fix low rank spells on your action bars with one click.
