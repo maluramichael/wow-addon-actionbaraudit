@@ -11,7 +11,7 @@ read_globals = {
     "LibStub", "CreateFrame", "UIParent", "GameTooltip", "Settings",
     "GetActionInfo", "GetSpellInfo", "GetSpellTexture",
     "GetSpellBookItemName", "GetSpellBookItemInfo", "GetSpellTabInfo", "GetNumSpellTabs", "GetMacroSpell", "GetSpellSubtext",
-    "HasAction", "Spell", "SpellBookFrame", "BOOKTYPE_SPELL",
+    "HasAction", "Spell", "BOOKTYPE_SPELL", "C_SpellBook", "C_Spell", "Enum",
     "PickupSpellBookItem", "PlaceAction", "ClearCursor", "InCombatLockdown",
     "InterfaceOptionsFrame_OpenToCategory",
     "C_Timer", "IsShiftKeyDown",

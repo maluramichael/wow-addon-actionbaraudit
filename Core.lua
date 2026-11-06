@@ -19,6 +19,37 @@ local rankedSpells = {} -- All spells with ranks for the ignore list
 -- Default action bar button names
 local defaultBars = {"Action", "MultiBarBottomLeft", "MultiBarBottomRight", "MultiBarRight", "MultiBarLeft"}
 
+-- Spellbook API: classic globals, or C_SpellBook/C_Spell on the modern engine (WoW Forever)
+local GetNumSpellTabs, GetSpellTabInfo, GetSpellBookItemName, GetSpellBookItemInfo
+local PickupSpellBookItem, GetSpellInfo, GetSpellSubtext, GetSpellTexture
+local BOOKTYPE_SPELL = BOOKTYPE_SPELL
+if _G.GetNumSpellTabs then
+    GetNumSpellTabs, GetSpellTabInfo = _G.GetNumSpellTabs, _G.GetSpellTabInfo
+    GetSpellBookItemName, GetSpellBookItemInfo = _G.GetSpellBookItemName, _G.GetSpellBookItemInfo
+    PickupSpellBookItem, GetSpellInfo = _G.PickupSpellBookItem, _G.GetSpellInfo
+    GetSpellSubtext, GetSpellTexture = _G.GetSpellSubtext, _G.GetSpellTexture
+else
+    local SB, S = C_SpellBook, C_Spell
+    BOOKTYPE_SPELL = Enum.SpellBookSpellBank.Player
+    GetNumSpellTabs = SB.GetNumSpellBookSkillLines
+    GetSpellTabInfo = function(tab)
+        local info = SB.GetSpellBookSkillLineInfo(tab)
+        if info then return info.name, info.iconID, info.itemIndexOffset, info.numSpellBookItems end
+        return nil, nil, 0, 0
+    end
+    GetSpellBookItemName = SB.GetSpellBookItemName
+    GetSpellBookItemInfo = function(index, bank)
+        local info = SB.GetSpellBookItemInfo(index, bank)
+        if info then return info.itemType, info.spellID end
+    end
+    PickupSpellBookItem = SB.PickupSpellBookItem
+    GetSpellInfo = function(spellID)
+        local info = S.GetSpellInfo(spellID)
+        return info and info.name
+    end
+    GetSpellSubtext, GetSpellTexture = S.GetSpellSubtext, S.GetSpellTexture
+end
+
 -- Check if a spell is ignored
 local function IsSpellIgnored(spellName)
     return ActionBarAudit.db and ActionBarAudit.db.char.ignoredSpells[spellName]
@@ -236,7 +267,6 @@ function ActionBarAudit:OnInitialize()
     LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, self:GetOptionsTable())
     LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, "ActionBarAudit")
     self:SetupMinimapButton()
-    self:CreateSpellbookButtons()
 end
 
 function ActionBarAudit:OnEnable()
@@ -293,18 +323,20 @@ function ActionBarAudit:SetupMinimapButton()
     local dataObj = LDB:NewDataObject("ActionBarAudit", {
         type = "launcher",
         icon = "Interface\\Icons\\INV_Misc_Gear_01",
-        OnClick = function(_, button)
-            if button == "LeftButton" then
+        OnClick = function(_, btn)
+            if btn == "LeftButton" then
                 if IsShiftKeyDown() then
                     -- Shift+left click: scan and fix
+                    print("|cFFFFFF00ActionBarAudit:|r Scanning and fixing...")
                     ScanHotbars(false)
-                    C_Timer.After(0.1, function()
+                    C_Timer.After(0.2, function()
                         FixLowRankSpells()
                     end)
                 else
+                    print("|cFFFFFF00ActionBarAudit:|r Scanning hotbars...")
                     ScanHotbars(true)
                 end
-            elseif button == "RightButton" then
+            elseif btn == "RightButton" then
                 self:ShowIgnorePanel()
             end
         end,
@@ -317,56 +349,6 @@ function ActionBarAudit:SetupMinimapButton()
     })
     if not self.db.profile.minimap then self.db.profile.minimap = { hide = false } end
     LDBIcon:Register("ActionBarAudit", dataObj, self.db.profile.minimap)
-end
-
-function ActionBarAudit:CreateSpellbookButtons()
-    -- Check button
-    local checkButton = CreateFrame("Button", "ActionBarAuditCheckButton", SpellBookFrame, "UIPanelButtonTemplate")
-    checkButton:SetPoint("TOPRIGHT", SpellBookFrame, "TOPRIGHT", -56, -30)
-    checkButton:SetWidth(70)
-    checkButton:SetHeight(24)
-    checkButton:SetScale(0.9)
-    checkButton:SetText("Check")
-    checkButton:SetScript("OnClick", function()
-        print("|cFFFFFF00ActionBarAudit:|r Scanning hotbars...")
-        local count, ignoredCount = ScanHotbars(true)
-        if count == 0 and ignoredCount == 0 then
-            print("|cFFFFFF00ActionBarAudit:|r |cFF00C800No low rank spells found.|r")
-        elseif count == 0 then
-            print(format("|cFFFFFF00ActionBarAudit:|r |cFF00C800No low rank spells found.|r |cFF888888(%d ignored)|r", ignoredCount))
-        else
-            print(format("|cFFFFFF00ActionBarAudit:|r |cFFFF6900%d|r low rank spells found.", count))
-        end
-    end)
-    checkButton:SetScript("OnEnter", function(btn)
-        GameTooltip:SetOwner(btn, "ANCHOR_RIGHT")
-        GameTooltip:SetText("Check Hotbar Ranks")
-        GameTooltip:AddLine("Scan all action bars for low rank spells", 1, 1, 1)
-        GameTooltip:Show()
-    end)
-    checkButton:SetScript("OnLeave", function()
-        GameTooltip:Hide()
-    end)
-
-    -- Fix button
-    local fixButton = CreateFrame("Button", "ActionBarAuditFixButton", SpellBookFrame, "UIPanelButtonTemplate")
-    fixButton:SetPoint("RIGHT", checkButton, "LEFT", -4, 0)
-    fixButton:SetWidth(70)
-    fixButton:SetHeight(24)
-    fixButton:SetScale(0.9)
-    fixButton:SetText("Fix All")
-    fixButton:SetScript("OnClick", function()
-        FixLowRankSpells()
-    end)
-    fixButton:SetScript("OnEnter", function(btn)
-        GameTooltip:SetOwner(btn, "ANCHOR_RIGHT")
-        GameTooltip:SetText("Fix Low Rank Spells")
-        GameTooltip:AddLine("Upgrade all detected low rank spells to max rank", 1, 1, 1)
-        GameTooltip:Show()
-    end)
-    fixButton:SetScript("OnLeave", function()
-        GameTooltip:Hide()
-    end)
 end
 
 function ActionBarAudit:GetOptionsTable()
